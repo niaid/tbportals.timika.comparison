@@ -1,0 +1,259 @@
+---
+title: "Predictive capabilities of baseline radiological findings for early and late disease outcomes within sensitive and multi-drug resistant tuberculosis cases"
+author:
+  - name: "Gabriel Rosenfeld"
+    orcid: "0000-0002-9858-634X"
+    email: "gabriel.rosenfeld@nih.gov"
+    affiliations: "National Institute of Allergy and Infectious Diseases"
+  - name: "Andrei Gabrielian"
+    email: "gabr@niaid.nih.gov"
+    affiliations: "National Institute of Allergy and Infectious Diseases"
+  - name: "Darrell Hurt"
+    orcid: "0000-0002-9829-8567"
+    email: "darrell.hurt@nih.gov"
+    affiliations: "National Institute of Allergy and Infectious Diseases"
+  - name: "Alex Rosenthal"
+    orcid: "0000-0003-4190-9045"
+    email: "alexr@mail.nih.gov"
+    affiliations: "National Institute of Allergy and Infectious Diseases"
+format:
+  docx:
+    fig-width: 8.5
+    fig-height: 11.5
+    fig-dpi: 300
+editor: visual
+params:
+  num_itt: "default value"
+  num_matching_drop: "default value"
+  flow_table: "default value"
+bibliography: references.bib
+csl: european-journal-of-radiology-open.csl
+---
+
+## 1. Introduction
+
+The World Health Organization (WHO) estimates 10 million new cases of tuberculosis in 2020 with 1.5 million deaths, which is, unfortunately, the first increase in deaths since 2005 [@Jeremiah2022]. The COVID-19 pandemic has resulted in decreased reporting of cases and treatment for drug-resistant tuberculosis due to pandemic-related strains on healthcare systems globally [@pai2022]. The pandemic is viewed as one of the primary reasons for these recent setbacks with TB disease management. Recovery from the lingering effects of the pandemic necessitates decreasing the burden of poor outcomes from sensitive (DS) and drug resistant (DR) tuberculosis cases. Bacteriologically-confirmed pulmonary tuberculosis cases represent a significant risk of TB transmission to other persons in close proximity when the TB infected person generates airborne particles known as droplet nuclei created by common activities such as sneezing, coughing, singing, laughing, or even breathing [@Nardell2015].
+
+Routine monitoring by microscopy or culture for the absence of detectable *M.tuberculosis* in sputum, sputum conversion, is performed throughout TB treatment when mycobacteria is detected at the start of treatment. Nevertheless, culture-negative *M. tuberculosis* has been reported in up to 15-25% of TB cases [@Nguyen2019] representing a gap that could be filled by radiological monitoring for screening and detection of *M. tuberculosis*. Moreover, monitoring efforts via microscopy or culture are challenged by the difficulty of obtaining sputum from certain patients (children and those individuals with HIV infection) [@Harries2018] [@Sabur2017a]. Genetic molecular diagnostic testing is filling the gap without necessarily providing a quantitative assessment of the level of bacterial burden that microscopy or culture can provide. Without confirming the absence of mycobacteria during treatment, bacteriologically-confirmed TB patients remain infectious and pose a risk of transmission as well as opportunity for the spread of drug resistance. Radiology imaging is an alternative method that can help fill the gaps identified above by assessing the pathophysiology of the lung in response to the TB infection. The pathophysiological responses can help to diagnose TB and understand a patient's initial disease burden and transmission risk to others [@rosenfeld2022].
+
+Clinicians have a need for radiologically-derived clinical scores that could serve as a useful adjunct to identify high-risk patients having a greater disease severity, transmission risk potential, as well as longer-term potential for detrimental treatment outcome. This is especially important in the growing number of DR cases endemic in certain parts of the world where early diagnosis, risk management, and treatment are key to containing the spread. The Timika Score was first reported in 2010 and has showed strong association with sputum smear grade and early disease burden [@Ralph2010] [@Chakraborthy2018] [@Thiel2016]; however, its reported performance for treatment outcome has not been as strong [@Krishnamoorthy2022]. Since earlier studies often focused on DS, it is imperative to reassess Timika Score especially in the context of endemic DR TB in many areas of the world. The question is whether improvements in Timika Score's reported performance for early disease burden and treatment outcome are possible and in what context, DS only, DR only, or both DS and DR?
+
+The ability to study the relationship between radiologically-derived clinical scores and treatment outcome over time in both DS and DR TB cases requires a detailed dataset spanning these distinct domains of data and containing a sufficient number of cases. We leverage the TB Portals database [@Rosenthal2017] [@Rosenfeld2021] [@Gabrielian2019], a publicly-accessible, patient-centric resource on both DS and DR TB that capture treatment outcomes, radiological findings (both by professional radiologists and artificial intelligence), bacteriology, and other important aspects of the patient's case. Using this unique combination of data, we assess the utility of baseline radiologist findings of CXRs (including Timika Score) to predict early disease burden as well as longer-term treatment outcome in DS and DR TB cases. The study is important because it investigates whether improvements in Timika Score are possible using a standardized, detailed set of radiologist observations beyond those that were originally used to derive the score. To our knowledge, this is the first study to assess baseline radiological findings by TB resistance profile to compare predictive ability for early and late clinical outcomes of interest during a TB patient's routine clinical care.
+
+## 2. Materials and Methods
+
+This study adheres to the transparent reporting of a multivariate prediction model for individual prognosis or diagnosis (TRIPOD) guidelines [@collins2015].
+
+### 2.1 Data Source and Access
+
+#### 2.1.1 Data source
+
+All data was obtained from TB Portals, a trans-national collaboration led by the NIAID, covering forty sites from sixteen countries in Eastern Europe, Asia, and sub-Saharan African. The data warehouse currently contains over 8000 patients registered between the years of 2008 to 2022. Only publicly-available, de-identified data was used. Each participating clinical research institution (<https://tbportals.niaid.nih.gov/where-do-our-cases-come-from>) receives approval from the participating institution's IRB for public-sharing and follows strict adherence to ethics rules requirements of CRDF Global and the International Science and Technology Center who are the grant-issuing institutions [@Rosenthal2017].
+
+#### 2.1.2 Data access
+
+The data was accessed using an available API service (<https://datasharing.tbportals.niaid.nih.gov/#/data-api>) through an R package wrapper (<https://niaid.github.io/tbportals.depot.api/>).
+
+### 2.2 Study Population
+
+#### 2.2.1 Inclusion and exclusion criteria
+
+Registered patients diagnosed with DS or multidrug-resistant (MDR) TB having an outcome of treatment success ("completed" or "cured") or treatment failure ("died" or "failure"), an age of onset greater than 18 years old, available sputum microscopy testing before treatment initiation, a radiologist-annotated CXR within 90 days of treatment start and 30 days of sputum microscopy testing were included.
+
+#### 2.2.2 Matched population
+
+To mitigate potential impacts of certain demographic or radiological factors that could bias comparison of predictive accuracy between resistance status, matching was performed on similar patient characteristics in the sensitive and MDR subgroups. Age, gender, HIV status, case definition, Timika Score, BMI, smoking use, and drug use were matched using the coarsened exact match algorithm[@MatchIt].
+
+### 2.3 Clinical Outcomes
+
+Two distinct clinical outcomes at the beginning and end of the patient's clinical history were considered. Sputum positivity prior to treatment was considered as the early outcome and treatment outcome was considered as the later outcome. Sputum positivity was defined as positive, if results were one of the following, "1 to 9 in 100 (1-9/100)", "10 to 99 in 100 (1+)", "1 to 9 in 1 (2+)", "10 to 99 in 1 (3+)", "More than 99 in 1 (4+)"; and negative (if results were "Negative") from the microscopy examination counting the amount of *M. tuberculosis* bacteria present in sputum. In situations where multiple microscopy results were available, the last available result was used. In situations where multiple microscopy results were available on the same day, the result with largest count of *M. tuberculosis* was used. Treatment response of the patient was defined as either treatment success ("completed" or "cured") or failure ("died" or "failure").
+
+### 2.4 Predictors
+
+#### 2.4.1 Matching predictors
+
+For the matching procedure, several attributes were used. A binary indicator of reported HIV status (1 for reported HIV, 0 for no reported HIV or missing) was derived from reported comorbidity. A binary indicator for smoking or drug use respectively (1 for reported use, 0 for no reported use or missing) was derived from the social risk factors attribute. BMI was categorized into "underweight" (\<18.5), "healthy" (between 18.5 and 25), "overweight/obese" (\> 25), or missing. Age, gender, case definition were used as described by the TB portals data model (<https://datasharing.tbportals.niaid.nih.gov/#/about-the-data>). Timika score was derived from the estimated overall volume of the lungs with any reported abnormality (0-100%) by adding 40 to this value in presence of a reported cavity [@Ralph2010] [@rosenfeld2022].
+
+#### 2.4.2 Predictive modeling predictors
+
+Predictors for modeling were derived from the radiologist findings of CXR. The TB portals describes the data model used for the manually annotated CXR (<https://datasharing.tbportals.niaid.nih.gov/#/about-the-data>). Some attributes are described at the whole lungs level (overall percent of abnormal volume, percent of hemithorax involvement, etc.) whereas other attributes are described at the sextant level (presence and size of cavity, presence and size of nodules, etc.). Timika score was derived as described in the matching procedure. Lung location was generated from location of reported sextant level findings ("upper" if occurring in either left or right upper sextant, "middle" if occurring in either left or right middle sextant, and "lower" if occurring in either left or right lower sextant). A binary indicator of cavity or nodule was derived using the sextant level reporting for cavity or nodules respectively.
+
+### 2.5 Missing data
+
+#### 2.5.1 Intention to treat analysis
+
+The TB Portals database contains patient's treatment history including the final outcome of treatment. For the purpose of this study, only treatment success or failure were modeled excluding other available treatment outcomes (e.g. loss to follow up, Still on treatment, etc.). There is a risk of bias in the generalization of the predictive performance of the resulting models due to exclusion of patients with these alternative outcome. An intention to treat analysis was performed to assess the likelihood that bias would impact the conclusions from the modeling. The `r params$num_itt` patients removed during treatment outcome selection step were included and outcomes imputed as treatment success to assess impact on model predictive performance.
+
+#### 2.5.2 Chest X ray findings
+
+An expert radiologist reviews the CXR image and provides findings in a standardized format required by the TB Portals program. Radiological findings were imputed as 0 for numerical attributes or "No" for binary "Yes/No" attributes if abnormalities were not identified by the radiologist. This is important since certain sextants of the lungs may not have any identifiable findings (e.g. upper left or lower right).
+
+### 2.6 Modeling
+
+#### 2.6.1 Calculation of model performance within each patient subgroup
+
+A nested cross validation (CV) stratified by outcome was performed within each subgroup (resistance type, matching, or intention to treat) to assess model predictive performance on clinical outcome of interest. Initially, the data is split into 10 equal sets termed outer folds, which are then split into a train and test set comprising 90% and 10% of the outer folder respectively. A model workflow was trained on the inner fold 90% training data and then tested on the 10% testing data using the tidymodels R package [@tidymodels] . The workflow incorporated feature selection and class balancing via upsampling to ensure that the ROC metric accounted for these upstream processing steps during training; therefore, data leakage or unfair estimation were mitigated. The seed to select each fold was kept constant when modeling each event to identify identical groups of patients for fold1, fold2, etc. to facilitate subsequent use of the fold ROC data for Bayesian ANOVA analysis.
+
+We trained a logistic regression model and random forest model using distinct workflows that leveraged all available features excluding Timika Score, only the Timika Score, or a domain-expert informed set of features \[e.g., Timika Score, lung location (upper, middle, lower), and presence of nodules\]. In the logistic model workflows, we included a near zero variance exclusion step (<https://recipes.tidymodels.org/reference/step_nzv.html>) to remove sparse variables and a Minimum Redundacy Maximum Relevancy (<https://stevenpawley.github.io/recipeselectors/reference/step_select_mrmr.html>) step to include only the features showing the most correlation with outcome but least correlation with each other. For the Random Forest workflows, we include all variables as the algorithm selects the most important variables during modeling. All analyses were done as a targets workflow [@targets] for enhanced reproducibility using R version 4.2.1. The code for the analysis can be found at <https://github.com/niaid/tbportals.timika.comparison>.
+
+#### 2.6.2 Bayesian ANOVA
+
+With the tidyposterior R package [@tidyposterior], we calculate the probability density of the model ROC by Bayesian analysis (<https://tidyposterior.tidymodels.org/reference/perf_mod.html>) using the observed performance for the best models. In doing so, we could posit questions such as "what is the probability that Timika Score can more reliably predict early versus late outcomes within DS cases" or "what is the probability that additional radiologist findings can more reliably predict treatment outcome versus Timika Score in MDR TB cases". To address these probabilistic questions, we defined a region of practical equivalence (ROPE) as 0.02 ROC meaning that any resulting probability describes boundaries of this threshold in the posterior distributions (e.g., 0.02 lower, 0.03 equivalent, and 0.95 higher probabilities corresponding to a comparison of Model A versus Model B indicates that the most probable result is that Model A's ROC exceeds Model B's by at least 0.02 ROC at 0.95 probability and we can reject null hypothesis of both falling within the ROPE).
+
+## 3. Results
+
+### 3.1. Study population and outcomes
+
+`r params$flow_table$num_cases[grepl("treatment outcome", params$flow_table$step)]` patients were included in the study population to model early and late clinical outcomes. Table 1 shows the loss of patients at each step of the inclusion criteria with `r params$flow_table$num_cases[grepl("drug matched", params$flow_table$step)]` matched patients identified for the matched analyses. After matching for age, gender, HIV, case definition, Timika Score, BMI, smoking, and drug use, matched covariates show a negligible absolute standardized mean difference between the sensitive and MDR cases of less than 0.1 (Supplementary Figure 1). The patient characteristics of the unmatched (Table 2) and matched (Table 3) study populations demonstrate observed relationships between the events of interest by resistance type. These observations are consistent with the matching procedure balancing the matched covariates between the DS and MDR TB subgroups.
+
+The unmatched MDR subgroup in Table 2 shows a lower percentage of sputum negative microscopy results (29.8% of MDR versus 36.8% of DS) and treatment success (76.3% of MDR versus 89% of DS). Moreover, there is a greater percentage of relapse cases or other case definitions suggesting previous history of TB infection (33.7% of MDR versus 12% of DS). Certain comorbidities and risk factors such as reported HIV infection, smoking, alcohol and drug use were higher in the unmatched MDR population. In the matched population, these differences between MDR and DS patients in Table 3 are reduced. For example, reported HIV was reduced from 15.3 % of MDR versus 3.3% of DS in the unmatched to 5.1 % of MDR versus 1.8% of DS in the matched. Case definition suggesting previous history of TB was reduced from 33.7% of MDR versus 12% of DS in the unmatched to 13.1% of MDR versus 6.4% of DS after matching and mean BMI was equivalent at 20.5. Demonstrating successful matching is important: if predictions are consistent in both unmatched and matched populations, this supports that findings are generalizable to new cohorts of DS and MDR TB patients.
+
+### 3.2 Modeling
+
+#### 3.2.1 Identifying the best performing models
+
+We use the median ROC from the CV results to identify the best performing models across DS and MDR TB patients. Identifying these models permitted us to formally test them later on by Bayesian analysis. CV results quickly established general trends in prediction performance across different models and prediction tasks. Interestingly, we noted better performance for predicting baseline sputum positivity in MDR TB compared to DS while the opposite was observed for treatment outcome. We compared the CV results from the unmatched populations since these correspond to the real-world characteristics of the selected cases in TB Portals. Most models within each prediction task and TB patient cohort perform similarly as evidenced by the range of ROC values. ROC between 0.6 and 0.63 and 0.66-0.71 were observed for baseline sputum positivity prediction in DS and MDR cases respectively. For treatment outcome, observed ROC values fell between the ranges of 0.58-0.69 and 0.58-0.64 in DS and MDR cases respectively. Model predictive performance for the two clinical outcomes is shown in Supplementary Table 1. Besides median, we report a number of other statistics on the performance of the CV ROC and also show performance on matched data. Model performance results demonstrate that matching had a modest effect if any at all on model performance.
+
+##### 3.2.1.1 Identifying the best models for DS
+
+The regression model including Timika Score, nodule, and lung location performed the best when predicting treatment outcome with a median ROC of 0.69. For predicting baseline sputum positivity, the logistic regression model using Timika Score performed the best with a median ROC of 0.63. Most models performed equivalently with matching having minimal impact. The best performing model using matched data had 0.72 and 0.66 ROC for treatment outcome and baseline sputum positivity respectively.
+
+##### 3.2.1.2 Identifying the best models for MDR TB
+
+Median ROC was lower for prediction of treatment outcome in general in the MDR TB cohort. Logistic regression using detailed radiologist findings performed the best with an ROC of 0.64. Matching had a modest impact on model performance for the logistic regression models as the median ROC decreased by \~0.05. Logistic regression using Timika Score demonstrated the best performance for predicting baseline sputum positivity with a ROC of 0.71. Predictive performance for baseline positivity was generally better than for sensitive TB patients. Matching showed a modest impact: ROC improved in the matched cohort for certain algorithms. The random forest model using detailed radiologist observations improved from 0.67 to 0.72 ROC for instance. This impact was smaller for other algorithms such as the logistic regression model using Timika Score which improved from 0.71 to 0.72 ROC.
+
+#### 3.2.2 Comparing the best performing models
+
+We next identified whether the best performing models using Timika Score exceeded the performance of those including detailed radiologist observations. Comparisons of the best performing models with probabilities of each conclusion is shown in Supplementary Table 2. These comparisons identified with high likelihood that Timika Score performs equivalently or better than using detailed radiologist findings in TB Portals in both DS (0.77 probability) and MDR (0.74 probability) patients for baseline sputum positivity. We observed that this was not the case for treatment outcome. The detailed radiologist findings could improve prediction performance over Timika Score with 0.84 and 0.63 probability for DS and MDR respectively. Moreover, we noted a decrease in performance of Timika Score when predicting treatment outcome compared to its stronger performance for baseline positivity especially in MDR TB (0.96 probability). To make the above comparisons, we calculated the probability that the observed CV model performance exceeded a ROPE of 0.02 by Bayesian ANOVA analysis. A representative example of the Bayesian ANOVA results is shown in Figure 1. By comparing these densities using the ROPE threshold, conclusions on the above differences could be made with associated probabilities for each.
+
+##### 3.2.2.1 Findings from comparison of the best models in DS
+
+When predicting baseline positivity, Timika Score is equivalent to or exceeds modeling using detailed radiologist observations with a probability of 0.77. For predicting treatment outcome, including detailed radiologist findings exceeded Timika Score with a probability of 0.84. Timika Score's predictive performance for baseline positivity compared to treatment outcome did not differ significantly with 0.47 probability. There is a higher degree of uncertainty in the previous assessment. Matching did not have a substantial effect on the conclusions. As an example, we assessed if Timika Score is equivalent to detailed radiologist observations for predicting baseline positivity. We calculated a probability of 0.54 versus 0.46 in unmatched and matched DS patients respectively noting that the probabilities are similar. Importantly, the intention to treat (IIT) analysis indicated that conclusions are not significantly impacted by drop-out prior to treatment completion (Supplementary Table 3). For instance, we analyzed the probability of Timika score performing equivalently to detailed radiologist observations for baseline positivity in the IIT analysis. We noted a probability of 0.54 in unmatched analysis as compared to 0.53 in the IIT results.
+
+##### 3.2.2.2 Findings from comparison of the best models in MDR TB
+
+Timika Score demonstrated equivalent or better prediction of baseline positivity compared to detailed radiologist observations (0.74 probability) as shown in supplementary table 2. For treatment outcome, detailed radiologist findings outperformed Timika Score with 0.63 probability. We also compared predictive performance of Timika Score for baseline positivity versus treatment outcome. Timika Score could more reliably predict baseline positivity with 0.96 probability. Matching did not have a substantial effect on predictions except for a modest effect on treatment outcome. It enhanced the likelihood that Timika Score performance was equivalent or exceeded detailed radiologist findings. We noted this increase from a calculation of 0.37 versus 0.71 probability in unmatched and matched MDR TB patients respectively. The IIT analysis revealed that conclusions regarding the predictive comparisons were not influenced by drop-out prior to treatment completion (Supplementary Table 3). Like in DS, we calculated the probability of Timika score performing equivalently to detailed radiologist observations for baseline positivity by IIT analysis. We calculated a probability of 0.55 in unmatched analysis as compared to 0.8 in the IIT analysis. In both comparisons, these were the most likely conclusions. The results from both DS and MDR modeling demonstrate the value of Timika Score for predicting baseline positivity and the potential for additional radiologist findings to enhance prediction of treatment outcome. The additional efforts to explore these comparisons with matching and IIT analyses indicate that the results are robust and likely to generalize well.
+
+#### 3.2.3 Interpretable machine learning
+
+After observing comparable performance of Timika Score with detailed radiologist observations for baseline positivity but not for treatment outcome, we endeavored to understand why through interpretable machine learning (IML) approaches of predictor importance and partial dependence plots. The most important predictor across DS (Figure 2A and 3A) and MDR (Figure 2C and 3C) groups was estimated overall percent of abnormal volume of the lung. Presence of cavity was also identified as important for prediction of baseline sputum positivity; however, it was not found among the top predictors of treatment outcome. We also support this finding by comparing its effect on prediction using partial dependence plots. Presence of cavity strongly influences the model to predict baseline positivity across different estimates of overall abnormal lung volume (Figures 2B and 2D); however, its influence wanes for prediction of treatment outcome (Figures 3B and 3D). Presence of nodules of various sizes and opacity were among the top predictors for baseline positivity and treatment outcome across both DS and MDR patients. Interestingly, percent of pleural effusion of hemithorax was identified as a top predictor for treatment outcome in MDR patients (Figure 3C).
+
+These observations are consistent with the difference in Timika Score's predictive performance for baseline sputum microscopy positivity and treatment outcome that we observed by Bayesian ANOVA. They suggest that other baseline radiological factors provide additional predictive capability for treatment outcome. One example previously mentioned in MDR patients is the percent of pleural effusion of hemithorax whereas another are the nodules of various size and opacity. Nonetheless, Timika Score demonstrated some predictive capacity towards treatment outcome since overall abnormal lung volume is the most important factor identified in both predictive tasks. Moreover, the above results suggest that for treatment outcome prediction, extent of severity (e.g., greater than 50% lung abnormal) is important especially in MDR patients. This is consistent with other studies showing extent of infection or delay to treatment having an important impact on treatment outcome[@Asres2018][@Rosenfeld2021].
+
+##### 3.2.3.1 Findings in baseline sputum positivity
+
+We first examined predictions of machine learning for baseline sputum microscopy positivity. The most important features for the random forest model workflow using all radiological findings are shown in Figure 2. Given the comparable performance of Timika Score with all other predictors for this prediction task, we hypothesized that overall abnormal lung volume and presence of cavity would be among the top features. The feature importance analysis in Figure 2A and 2C confirmed this hypothesis demonstrating that overall abnormal lung volume was the top predictive feature and presence of cavity was also among the top 10 important features. To explore how overall abnormal lung volume and cavity interaction impacted the model's predictions, we generated partial dependence plots for these two predictors in Figure 2B and 2D. Presence of cavity increased the marginal probability of the model to predict an outcome of baseline sputum microscopy positive by \~0.15 to 0.2 across the range of overall abnormal volume reported indicating that presence of a cavity strongly influenced the model to predict a positive baseline sputum microscopy. Moreover, overall abnormal lung volume increase led to a higher marginal probability of predicting a positive baseline microscopy up to \~ 25 percent abnormal volume of the lungs where it plateaued; therefore, prediction of positive baseline sputum microscopy increases sharply for the first reported 25% of overall lung abnormal area and further reported increases beyond this area does not have much of an added effect.
+
+##### 3.2.3.2 Findings in treatment outcome
+
+We next examined the machine learning predictions for the subsequent treatment outcome. The most important features for the random forest model workflow using all radiological findings are shown in Figure 3. Timika Score did not show comparable performance for this task so we hypothesized that other features might be identified among the most important features as shown in Figure 3A and 3C. Interestingly, overall abnormal lung volume was still identified as the most important feature but presence of cavity was no longer among the top 10 important features. Presence of cavity still increased the marginal probability of treatment failure in the Partial Dependence Plots; however, the increases across the range of reported overall abnormal volume values were less than what were observed when predicting baseline microscopy positivity and varied by reported abnormal lung volume (from a difference of \~0.02 to \~0.05 increase in probability). Moreover, the reported overall abnormal volume of the lung showed a more modest increase in marginal probability of poor outcome in Sensitive (increase of \~0.02 probability from 0 to 100% reported overall abnormal lung volume). In MDR, the probability of predicting poor outcome increased linearly by \~0.1 probability after the reported overall abnormal lung volume exceeded 50%.
+
+## 4. Discussion
+
+This study is unique in that it assesses detailed, baseline radiological findings' and Timika Score's predictive performance across two distinct clinical outcomes at the beginning and end of DS and MDR TB clinical care. To the best of our knowledge, this is the first study to use machine learning to compare the predictive performance of Timika Score with detailed radiologist findings within DS and MDR TB patients from a large, trans-national, multi-site cohort containing a wide variety of routinely collected radiological features and distinct clinical outcomes over time. Previous studies examined the performance of the Timika Score in one clinical site or prediction of a single clinical event [@Ralph2010] [@Kriel2015] [@Thiel2016] [@Chakraborthy2018] [@Riou2020] [@Di2021] [@Du2021] [@rosenfeld2022]. Moreover, this study utilized IML approaches to explain how the models arrive at each prediction. Estimated overall abnormal percent of lung volume was the most important predictor identified across clinical outcomes for both DS and MDR whereas presence of cavity was only identified during baseline positivity prediction. Presence of nodules in the upper and middle sextants of the lungs were also consistently among the top predictors for each outcome. These observations are consistent with a previous study analyzing CT images that showed association of disease extent and presence of cavity with sputum smear grade [@Ko2015]. Nevertheless, other features were unique to prediction of a specific outcome. For example, percent of pleural effusion of hemithorax was only identified in the top predictors for treatment outcome in MDR. Interestingly, pleural effusion has been suggested to be an indicator of TB reactivation in adults [@Kim2006] with potential of reactivation in previously healed TB cases [@Horsburgh2010] and its remission has been associated with treatment response by CT data [@Lee2008]. The IML results demonstrate why Timika Score performs equivalently or even better than detailed radiologist observations for baseline positivity but not for treatment outcome. The additional radiologist findings improved prediction with high likelihood.
+
+To address the most frequent concerns related to real world studies of tuberculosis such as biases arising from cohort selection or missing treatment outcome, we performed a variety of additional, careful tests. Certain patient characteristics such as HIV or age may influence treatment outcome [@Alayu2021] [@Araia2022] or baseline positivity [@Quincó2013]. Furthermore, measuring predictive performance across multiple clinical outcomes necessitating co-occuring information (e.g., baseline radiology and sputum microscopy) during specific periods of time within patient clinical care may result in selection bias. To compare model performance we include an analysis on matched DS and MDR patients on several covariates that had significant differences such as age, reported HIV, smoking, drug use, etc. We demonstrate that these covariates did not significantly impact the generalization of the findings in the matched analysis. The matched analysis showed consistent results with the unmatched analysis. Our IIT analysis also demonstrates that censoring or drop-out due to exclusion of certain treatment outcomes does not impact our findings. By verifying that the results are consistent across these additional cross-checks, we provide stronger evidence in support of the main findings.
+
+Previous machine learning studies may not consider how biases in study population or clinical events (such as patient drop-out prior to treatment completion) might impact model performance. Moreover, such studies may not consider model performance in a way to assess the clinical relevance. We employed state of the art Bayesian methods to compare model performance from the best model workflows [@tidyposterior]. If machine learning studies compare only CV results, comparisons can results in statistically significant differences that are not clinically meaningful (e.g. a negligible difference in AUC). The Bayesian ANOVA approach assesses model predictive performance in a probabilistic manner to overcome these limitations [@JMLR:v18:16-305]. For example, we clearly demonstrate with a defined ROPE the likelihood of improvements of models incorporating standardized, detailed radiologist findings compared to Timika Score. These comparisons show where improvements with clinical impact are likely versus unlikely to be achieved.
+
+In our study, Timika Score performed equivalently or even exceeded using all other radiological features for prediction of baseline sputum microscopy. This is a useful finding for radiologists as it is an easy to implement score and valuable clinical tool. Our results for prediction of sputum microscopy are consistent with prior findings showing the utility of Timika Score for baseline disease severity and infectiousness [@Chakraborthy2018] [@rosenfeld2022] [@Ralph2010]. With regards to treatment outcome, our results fall into the range of previously reported ROC metrics showing a modest predictive ability for Timika Score between 0.6 and 0.7 ROC [@Krishnamoorthy2022] [@Kriel2015]. We show that Timika Score performs equivalently in DS patients for baseline sputum positivity and treatment outcome but not in MDR patients where it has less reliability to predict treatment outcome. The difference we observed in performance for early and late clinical outcomes may be due to the differing treatment lengths of DS and MDR patients[@Winston2012] [@Jang2020]. The extended time associated with MDR treatment may diminish the capability of baseline radiology to reliably predict treatment outcomes. The comparisons showing that use of detailed radiologist findings outperforms Timika Score suggest opportunity for baseline, radiology-informed clinical score development for treatment outcome especially in DS patients with shorter treatments. While CXR serves as a useful tool for TB diagnosis and monitoring, they are two dimensional making some of the clinical parameter estimates difficult. As CT technology becomes more accessible, future research could examine Timika Score and other radiology-informed scores in three dimensional CT images permitting greater confidence in the estimates of salient radiological findings.
+
+## 5. Conclusion
+
+Timika Score performed equivalently to using all other radiological findings for prediction of baseline sputum microscopy positivity in both sensitive and MDR patients; however, prediction of treatment outcome using Timika Score was less reliable compared to using all other radiologist findings especially in sensitive patients. We also demonstrate that Timika Score predictive performance for baseline microscopy sputum positivity exceeds that of its performance for treatment outcome in MDR patients but not sensitive patients. These findings may aid in the appropriate usage of Timika Score for the identification of high-risk patients at the beginning and end of TB clinical care, research prioritization on automated features for deep learning, and opportunities for the development of novel radiology-informed clinical scores. Timika Score makes it easier to use baseline chest X-rays for predicting early infectiousness of the case and exhibits performance that is comparable to that of using more comprehensive, standardized information from the radiologist. Although the score's usefulness for predicting treatment outcomes declines, it is still surpassed by the use of the detailed radiologist observations, particularly in cases of MDR TB.
+
+## Figures and Tables
+
+Table 1. Inclusion criteria
+
+Overview of stepwise cohort selection strategy used to select the final study population. The inclusion criteria is shown in the case criteria column along with the identified number of cases included and excluded at each step which occurs consecutively.
+
+Table 2. Unmatched study population
+
+Overview of the unmatched study population prior to final matching step. Values indicate the count of patients with parenthesis indicating percentage unless otherwise indicated by a Mean (SD) or Range for numerical data.
+
+Table 3. Matched study population
+
+Overview of the matched study population after final matching step. Values indicate the count of patients with parenthesis indicating percentage unless otherwise indicated by a Mean (SD) or Range for numerical data.
+
+Figure 1. Bayesian ANOVA estimation of model performance in unmatched cohort.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(targets)
+library(ggpubr)
+tar_load(visualizations_tables)
+ggarrange(visualizations_tables$sen_microscopy + theme(legend.position = "none", title=element_blank(), text = element_text(size = 10)), visualizations_tables$sen_outcome + theme(legend.position = "none", title=element_blank(), text = element_text(size = 10)),
+                   visualizations_tables$mdr_microscopy + theme(legend.position = "none", title=element_blank(), text = element_text(size = 10)), visualizations_tables$mdr_outcome + theme(legend.position = "none", title=element_blank(), text = element_text(size = 10)),
+                   ncol = 2, labels = c("A", "B", "C", "D"), nrow = 2, hjust = -3, vjust = 2)
+```
+
+Figure 1. The posterior distributions of the ROC metric calculated from the Bayesian ANOVA modeling of the different modeling workflows. Above example is shown for the unmatched subgroups and is representative of what can be generated for the other subgroups of interest. Different colors represent the posterior distributions of distinct workflows. Red: Logistic Regression using all variables, Yellow: Random Forest using all variables, Green: Logistic Regression using only Timika Score, Light Blue: Logistic Regression using Timika plus lung location and nodule present (Timika Plus), Dark Blue: Random Forest using Timika Plus, Pink: Random Forest using Timika Score. A) Prediction of the baseline sputum microscopy positivity in Sensitive TB patients. B) Prediction of the treatment outcome in Sensitive TB patients. C) Prediction of the baseline sputum microscopy positivity in MDR TB patients. D) Prediction of the treatment outcome in MDR TB patients.
+
+Figure 2. Important radiological predictors from the Random Forest model to predict baseline microscopy positivity in matched Sensitive TB and MDR TB patients.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(targets)
+library(ggpubr)
+tar_load(matched_sensitive_predictions)
+tar_load(matched_mdr_predictions)
+ggarrange(matched_sensitive_predictions$model_interpretability_microscopy$imp_vars + theme(text = element_text(size = 8)), matched_sensitive_predictions$model_interpretability_microscopy$pdp_overallabrnormal_cavity + theme(axis.title.y=element_blank(), plot.title = element_blank(), plot.subtitle = element_blank(), text = element_text(size = 10)),
+          matched_mdr_predictions$model_interpretability_microscopy$imp_vars + theme(text = element_text(size = 8)), matched_mdr_predictions$model_interpretability_microscopy$pdp_overallabrnormal_cavity + theme(axis.title.y=element_blank(), plot.title = element_blank(), plot.subtitle = element_blank(), text = element_text(size = 10)),
+                   ncol = 2, labels = c("A", "B", "C", "D"), nrow = 2, hjust = -3, vjust = 2)
+```
+
+Figure 2. The most important features from the random forest workflow trained on the matched population of Sensitive and MDR TB patients is shown for A) Sensitive TB Patients and C) MDR TB Patients. Partial Dependence Plot showing the predictive relationship between overall abnormal volume of lung and cavity status is shown for the same random forest workflow for B) Sensitive TB Patients and D) MDR TB Patients. Presence of cavity (blue) modify the model's predictive probability of baseline microscopy positivity by increasing this probability compared to absence of cavity (red).
+
+Figure 3. Important radiological predictors from the Random Forest model to predict treatment success in matched Sensitive TB and MDR TB patients.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(targets)
+library(ggpubr)
+tar_load(matched_sensitive_predictions)
+tar_load(matched_mdr_predictions)
+ggarrange(matched_sensitive_predictions$model_interpretability_treatment$imp_vars + theme(text = element_text(size = 8)), matched_sensitive_predictions$model_interpretability_treatment$pdp_overallabrnormal_cavity + theme(axis.title.y=element_blank(), plot.title = element_blank(), plot.subtitle = element_blank(), text = element_text(size = 10)),
+          matched_mdr_predictions$model_interpretability_treatment$imp_vars + theme(text = element_text(size = 8)), matched_mdr_predictions$model_interpretability_treatment$pdp_overallabrnormal_cavity + theme(axis.title.y=element_blank(), plot.title = element_blank(), plot.subtitle = element_blank(), text = element_text(size = 10)),
+                   ncol = 2, labels = c("A", "B", "C", "D"), nrow = 2, hjust = -3, vjust = 2)
+```
+
+Figure 3. The most important features from the random forest workflow trained on the matched population of Sensitive and MDR TB patients is shown for A) Sensitive TB Patients and C) MDR TB Patients. Partial Dependence Plot showing the predictive relationship between overall abnormal volume of lung and cavity status is shown for the same random forest workflow for B) Sensitive TB Patients and D) MDR TB Patients. Presence of cavity (blue) modify the model's predictive probability of baseline microscopy positivity by increasing this probability compared to absence of cavity (red).
+
+### Supplementary Data
+
+Supplementary Figure 1. Absolute Standardized Mean Difference before and after matching.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(MatchIt)
+plot(visualizations_tables$smd_plot)
+```
+
+Absolute Standardized Mean Difference for Unmatched (open circles) and Matched (closed circles). For the set of matched covariates, the matching procedure results in a significant reduction in the absolute SMD within each covariate such that all covariates have a difference less than 0.1 represented by the solid line.
+
+Supplementary Table 1. Summarized model performance from CV.
+
+Summarized model performance by subgroup and outcome. Best performing models were identified using the mean posterior distribution of the ROC metric. Column "model" shows each workflow. all_log: Logistic Regression on all predictors, all_rand: Random Forest on all predictors, timika_log: Logistic Regression on Timika Score, timika_rand: Random Forest on Timika Score, timika_plus_log: Logistic Regression on Timika Score plus lung location and nodule presence, timika_plus_rand: Random Forest on Timika Score plus lung location and nodule presence. Column "resistance" shows the Sensitive or MDR TB patient population. Column "matching" shows the population with or without matching. Column "outcome" shows the outcome of interest that was predicted. treatment: treatment success, baseline_sputum: baseline sputum microscopy positivity. The mean, median, standard deviation (SD), and median absolute deviation (MAD) are shown for ROC metrics for the 10 fold CV.
+
+Supplementary Table 2. Model comparison probabilities for the best models for each subgroup and outcome of interest from the Bayesian ANOVA using a ROPE of 0.02.
+
+Probabilistic comparison of the best model performance to determine if the best performing Timika Score model performs equivalently with the best performing model using all predictors and whether Timika Score performs equivalently for early and late outcome prediction. Column "contrast" shows the two workflows being compared with the model on the left representing the one for which the positive or negative probability is being calculated (e.g. Model A vs Model B, pract_neg = 0.05, pract_equiv = 0.05, and pract_pos = 0.9 indicates Model A has 0.9 probability of showing a ROC greater than 0.02 versus Model B). all_log: Logistic Regression on all predictors, all_rand: Random Forest on all predictors, timika_log: Logistic Regression on Timika Score, timika_rand: Random Forest on Timika Score, timika_plus_log: Logistic Regression on Timika Score plus lung location and nodule presence, timika_plus_rand: Random Forest on Timika Score plus lung location and nodule presence. A contrast workflow ending in "outcome" indicates a model predicting treatment outcome and those not ending in "outcome" indicates a model predicting baseline sputum microscopy positivity. The columns (pract_neg, pract_equiv, and pract_pos) indicate the probabilities of the left model workflow contrasted in the "contrast" column having an ROC lower than 0.02, within the 0.02 ROPE or signifying the null hypothesis, or exceeding 0.02 compared to the right model workflow. Column "resistance" shows the Sensitive or MDR TB patient population. Column "matching" shows the population with or without matching. Column "outcome" shows the outcome of interest that was compared. treatment: treatment success, baseline_sputum: baseline sputum microscopy positivity, timika outcome comparison: comparison of sputum microscopy positivity with treatment outcome using the best performing Timika Score models for each outcome.
+
+Supplementary Table 3. Model comparison probabilities for the best models for each subgroup and event of interest from the Bayesian ANOVA using a ROPE of 0.02 for the ITT analysis.
+
+Probabilistic comparison of the best model performance to determine if the best performing Timika Score model performs equivalently with the best performing model using all predictors and whether Timika Score performs equivalently for early and late outcome prediction. The intention to treat analysis considers the small set of patients who dropped out of the study to ascertain impact on model performance. Column "contrast" shows the two workflows being compared with the model on the left representing the one for which the positive or negative probability is being calculated (e.g. Model A vs Model B, pract_neg = 0.05, pract_equiv = 0.05, and pract_pos = 0.9 indicates Model A has 0.9 probability of showing a ROC greater than 0.02 versus Model B). all_log: Logistic Regression on all predictors, all_rand: Random Forest on all predictors, timika_log: Logistic Regression on Timika Score, timika_rand: Random Forest on Timika Score, timika_plus_log: Logistic Regression on Timika Score plus lung location and nodule presence, timika_plus_rand: Random Forest on Timika Score plus lung location and nodule presence. A contrast workflow ending in "outcome" indicates a model predicting treatment outcome and those not ending in "outcome" indicates a model predicting baseline sputum microscopy positivity. The columns (pract_neg, pract_equiv, and pract_pos) indicate the probabilities of the left model workflow contrasted in the "contrast" column having an ROC lower than 0.02, within the 0.02 ROPE or signifying the null hypothesis, or exceeding 0.02 compared to the right model workflow. Column "resistance" shows the Sensitive or MDR TB patient population. Column "matching" shows the population with or without matching. Column "outcome" shows the outcome of interest that was compared. treatment: treatment success, baseline_sputum: baseline sputum microscopy positivity, timika outcome comparison: comparison of sputum microscopy positivity with treatment outcome using the best performing Timika Score models for each outcome.
+
+## Funding
+
+This research was supported in part by the Office of Science Management and Operations of NIAID at the NIH.
+
+## CRediT authorship contribution statement
+
+**Gabriel Rosenfeld:** Conceptualization, Data analysis, Investigation, Methodology, Validation, Writing - original draft, Writing - review & editing. **Andrei Gabrielian:** Conceptualization, Supervision, Validation, Writing - original draft, Writing - review & editing. **Darrell Hurt:** Supervision, Project Administration, Writing - review & editing. **Alex Rosenthal:** Supervision, Project Administration, Writing - review & editing.
+
+## Conflict of Interest
+
+The authors declare that they have no conflict of interest.
+
+## Acknowledgements
+
+The authors would like to thank Michael Tartakovsky and the program leadership of TB Portals for all their support and contributions.
+
+## References

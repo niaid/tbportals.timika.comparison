@@ -1,0 +1,13 @@
+contrast,pract_neg,pract_equiv,pract_pos,resistance,matching,outcome
+timika_log vs all_rand,0.23,0.54,0.23,sensitive,unmatched,baseline_sputum
+all_log_outcome vs timika_rand_outcome,0.02,0.15,0.84,sensitive,unmatched,treatment
+timika_log vs timika_rand_outcome,0.22,0.47,0.31,sensitive,unmatched,timika outcome comparison
+timika_log vs all_rand,0.26,0.55,0.19,mdr,unmatched,baseline_sputum
+all_log_outcome vs timika_log_outcome,0.04,0.33,0.63,mdr,unmatched,treatment
+timika_log vs timika_log_outcome,0,0.04,0.96,mdr,unmatched,timika outcome comparison
+timika_log vs all_rand,0.21,0.46,0.33,sensitive,matched,baseline_sputum
+all_rand_outcome vs timika_rand_outcome,0.01,0.05,0.94,sensitive,matched,treatment
+timika_log vs timika_rand_outcome,0.16,0.32,0.52,sensitive,matched,timika outcome comparison
+all_log vs timika_log,0.25,0.52,0.22,mdr,matched,baseline_sputum
+all_log_outcome vs timika_log_outcome,0.32,0.39,0.29,mdr,matched,treatment
+timika_log vs timika_log_outcome,0,0,1,mdr,matched,timika outcome comparison

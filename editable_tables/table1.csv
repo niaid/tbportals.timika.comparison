@@ -1,0 +1,9 @@
+step,type,num_cases,loss
+all cases,inclusion,8779,NA
+Age of onset >= 18,inclusion,8643,-136
+Has positive or negative sputum microscopy before treatment start,inclusion,6981,-1662
+Has annotated CXR within 90 days of treatment start,inclusion,4089,-2892
+Has annotated CXR within 30 days prior to sputum microscopy,inclusion,3109,-980
+"Type of resistance = Sensitive, MDR non XDR",inclusion,2404,-705
+"Has treatment outcome of Completed, Cured, Died, or Failure",inclusion,2142,-262
+"Age, gender, hiv, case definition, timika score, bmi, risk smoker, risk drug matched",inclusion,1325,-817
